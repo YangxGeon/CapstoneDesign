@@ -1,6 +1,7 @@
 package dankook.capstone.oneByOne.auth.controller;
 
 import dankook.capstone.oneByOne.auth.service.AuthService;
+import dankook.capstone.oneByOne.auth.service.dto.LoginRequest;
 import dankook.capstone.oneByOne.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,5 +17,10 @@ public class AuthController {
     @PostMapping("/auth/register")
     public void register(@RequestBody Member member) {
         authService.register(member);
+    }
+
+    @PostMapping("/auth/login")
+    public void register(@RequestBody LoginRequest request) {
+        authService.login(request);
     }
 }
