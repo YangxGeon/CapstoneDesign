@@ -18,7 +18,7 @@ public class AuthService {
 
     public void login(LoginRequest request) {
         Member foundMember = memberRepository.findByUsername(request.getUsername());
-        if (request.getUsername() != foundMember.getUsername()){
+        if (request.getPassword() != foundMember.getPassword()){
             throw new IllegalArgumentException("로그인 정보 불일치");
         }
     }
