@@ -64,10 +64,10 @@ function Navbar() {
 		<Header>
 			<Logo><Link to="/">한대모여</Link></Logo>
 			<Nav>
-				<Menu>동아리 모여</Menu>
-				<Menu>스터디 모여</Menu>
-				<Menu>프로젝트 모여</Menu>
-				<Menu>멘토멘티 모여</Menu>
+				<Menu><Link to="/academicclub">동아리 모여</Link></Menu>
+				<Menu><Link to="/study">스터디 모여</Link></Menu>
+				<Menu><Link to="/project">프로젝트 모여</Link></Menu>
+				<Menu><Link to="/mento">멘토멘티 모여</Link></Menu>
 			</Nav>
 			<BtnBox>
 				<Link to="/SignIn"><LoginBtn>로그인</LoginBtn></Link>

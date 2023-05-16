@@ -4,6 +4,10 @@ import Home from "./pages/Home";
 import React from "react";
 import JoinForm from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import AcademicClub from './pages/AcademicClub';
+import Project from './pages/Project';
+import Mento from './pages/Mento';
+import Study from './pages/Study';
 
 const Router = () => {
 	return (
@@ -11,6 +15,10 @@ const Router = () => {
 			<Route path="/" element={<Home />} />
 			<Route path="/SignIn" element={<SignIn />} />
 			<Route path="/SignUp" element={<JoinForm />} />
+			<Route path='/academicclub' element={<AcademicClub/>} />
+			<Route path='/study' element={<Study/>} />
+			<Route path='/mento' element={<Mento/>} />
+			<Route path='/project' element={<Project/>} />
 		</Routes>
 	);
 };
