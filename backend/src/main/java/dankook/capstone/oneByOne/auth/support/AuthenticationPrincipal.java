@@ -1,4 +1,4 @@
-package dankook.capstone.oneByOne.support;
+package dankook.capstone.oneByOne.auth.support;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

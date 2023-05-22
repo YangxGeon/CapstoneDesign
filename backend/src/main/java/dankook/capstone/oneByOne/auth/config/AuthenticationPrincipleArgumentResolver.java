@@ -1,8 +1,8 @@
-package dankook.capstone.oneByOne.config;
+package dankook.capstone.oneByOne.auth.config;
 
 import dankook.capstone.oneByOne.auth.service.AuthService;
-import dankook.capstone.oneByOne.support.AuthenticationPrincipal;
-import dankook.capstone.oneByOne.support.AuthorizationExtractor;
+import dankook.capstone.oneByOne.auth.support.AuthenticationPrincipal;
+import dankook.capstone.oneByOne.auth.support.AuthorizationExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

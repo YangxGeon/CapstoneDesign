@@ -1,4 +1,4 @@
-package dankook.capstone.oneByOne.support;
+package dankook.capstone.oneByOne.auth.support;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;

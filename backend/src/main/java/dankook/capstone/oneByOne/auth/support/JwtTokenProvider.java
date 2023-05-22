@@ -1,4 +1,4 @@
-package dankook.capstone.oneByOne.support;
+package dankook.capstone.oneByOne.auth.support;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

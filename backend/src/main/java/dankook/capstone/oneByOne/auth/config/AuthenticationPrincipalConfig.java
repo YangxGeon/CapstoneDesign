@@ -1,4 +1,4 @@
-package dankook.capstone.oneByOne.config;
+package dankook.capstone.oneByOne.auth.config;
 
 import dankook.capstone.oneByOne.auth.service.AuthService;
 import java.util.List;
