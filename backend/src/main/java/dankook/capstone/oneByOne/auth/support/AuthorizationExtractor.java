@@ -13,7 +13,7 @@ public class AuthorizationExtractor {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
-            String authHeaderValue = extractAuthHEaderWithBearer(request, value);
+            String authHeaderValue = extractAuthHeaderWithBearer(request, value);
             if (authHeaderValue != null) {
                 return authHeaderValue;
             }
@@ -22,7 +22,7 @@ public class AuthorizationExtractor {
         return null;
     }
 
-    private static String extractAuthHEaderWithBearer(HttpServletRequest request, String value) {
+    private static String extractAuthHeaderWithBearer(HttpServletRequest request, String value) {
         if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
             String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
             request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
