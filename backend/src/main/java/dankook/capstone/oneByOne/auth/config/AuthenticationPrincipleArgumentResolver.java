@@ -29,6 +29,6 @@ public class AuthenticationPrincipleArgumentResolver implements HandlerMethodArg
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
 
-        return null;
+        return token;
     }
 }

@@ -1,5 +1,6 @@
 package dankook.capstone.oneByOne.notice.controller;
 
+import dankook.capstone.oneByOne.auth.support.AuthenticationPrincipal;
 import dankook.capstone.oneByOne.notice.domain.Notice;
 import dankook.capstone.oneByOne.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,8 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/api/notice")
-    public ResponseEntity<Void> writeNotice(Notice request) {
-        noticeService.write(request);
+    public ResponseEntity<Void> writeNotice(@AuthenticationPrincipal String email, Notice request) {
+        noticeService.write(email, request);
         return ResponseEntity.ok().build();
     }
 }
