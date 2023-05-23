@@ -26,7 +26,7 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-left: 35%;
+  margin-left: 30%;
   font-weight: bold;
 `;
 
@@ -64,6 +64,7 @@ function Navbar() {
 		<Header>
 			<Logo><Link to="/">한대모여</Link></Logo>
 			<Nav>
+				<Menu><Link to="/info">정보공유 모여</Link></Menu>
 				<Menu><Link to="/academicclub">동아리 모여</Link></Menu>
 				<Menu><Link to="/study">스터디 모여</Link></Menu>
 				<Menu><Link to="/project">프로젝트 모여</Link></Menu>

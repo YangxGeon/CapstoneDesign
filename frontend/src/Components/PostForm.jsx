@@ -39,7 +39,11 @@ const PostForm = () => {
       return;
     }
     if (title.length > 25) {
-      alert('제목은 25자를 넘으면 안됩니다.')
+      alert('제목은 25자를 넘으면 안됩니다.');
+      return;
+    }
+    if (content.length > 300) {
+      alert('글 내용은 300자를 넘으면 안됩니다.');
       return;
     }
     console.log(`Title: ${title}, Content: ${content}`);

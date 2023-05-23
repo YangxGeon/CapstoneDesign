@@ -9,11 +9,13 @@ import Project from './pages/Project';
 import Mento from './pages/Mento';
 import Study from './pages/Study';
 import PostForm from './Components/PostForm';
+import Info from './pages/Info';
 
 const Router = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Home />} />
+			<Route path="/info" element={<Info />} />
 			<Route path="/SignIn" element={<SignIn />} />
 			<Route path="/SignUp" element={<JoinForm />} />
 			<Route path='/academicclub' element={<AcademicClub />} />
