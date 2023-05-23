@@ -51,12 +51,16 @@ const SignIn = () => {
     const {password,id } = data;
     const getData = { password,id };
 
-    // get
+    // post
     await axios
-      .get('http://localhost:8080/auth/register', {param : getData})
+      .post('http://localhost:8080/auth/register', {param : getData})
       .then(function (response) {
-        console.log(response, '성공');
-        history('/SignIn');
+        if (response.status === 200){
+          console.log(response, '성공');
+          const token = response.data.token;
+          localStorage.setItem('jwtToken',token);
+          history('/SignIn');
+        }
       })
       .catch(function (err) {
         console.log(err);

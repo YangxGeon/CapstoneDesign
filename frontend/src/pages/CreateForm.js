@@ -1,12 +1,17 @@
 import * as React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../Components/Navbar';
+import axios from 'axios';
 import { Container,Paper,TextField,Typography,Box,
 Radio,
 RadioGroup,
 FormControl,
 FormControlLabel,
-Button } from '@mui/material';
+Button, 
+Grid,
+} from '@mui/material';
+import BasicCard from '../Components/BasicCard';
 
 
 const Header = styled.div`
@@ -27,19 +32,31 @@ const HeaderComment1 = styled.div`
 `;
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
 }));
 
 const theme = {
   spacing: 8,
 }
 
+function CreateForm() {  
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
+  const [content, setContent] = useState('');
 
-function CreateForm() {
+  const Data = {title,type,content};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await axios
+      .post('http://localhost:8080/event/form', {param : Data})
+      .then(function (response) {
+        console.log(response, '성공');
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <Navbar></Navbar>
@@ -52,7 +69,7 @@ function CreateForm() {
             이벤트 이름
           </Typography>
         </Box>
-        <TextField fullWidth label="이벤트 이름" id="fullWidth" />
+        <TextField fullWidth label="이벤트 이름" id="fullWidth" value={title} />
         <Box sx ={{m:3}}>
           <Typography component="h1" variant="h5" style={{ verticalAlign: "middle" }}>
             이벤트 종류
@@ -63,10 +80,11 @@ function CreateForm() {
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="study"
             name="radio-buttons-group"
+            value={type}
           >
-            <FormControlLabel value="study" control={<Radio />} label="study" />
-            <FormControlLabel value="competition" control={<Radio />} label="competition" />
-            <FormControlLabel value="project" control={<Radio />} label="project" />
+            <FormControlLabel value="study" name = "study" control={<Radio />} label="study" />
+            <FormControlLabel value="competition" name = "competition" control={<Radio />} label="competition" />
+            <FormControlLabel value="project" name = "project" control={<Radio />} label="project" />
           </RadioGroup>
         </FormControl>
           <Box sx ={{m:3}}>
@@ -78,6 +96,7 @@ function CreateForm() {
             label="내용"
             multiline
             rows={20}
+            value={content}
           />
           <Button
             type="submit"
