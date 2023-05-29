@@ -4,7 +4,9 @@ import dankook.capstone.oneByOne.member.domain.Member;
 import dankook.capstone.oneByOne.member.domain.repository.MemberRepository;
 import dankook.capstone.oneByOne.notice.domain.Notice;
 import dankook.capstone.oneByOne.notice.domain.repository.NoticeRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,5 +21,9 @@ public class NoticeService {
     public void write(final String email, final Notice request) {
         final Member foundMember = memberRepository.findByEmail(email);
         noticeRepository.save(new Notice(request.getTitle(), request.getDescription(), foundMember));
+    }
+
+    public List<Notice> getNotices(final Pageable pageable) {
+        return noticeRepository.findAll(pageable).getContent();
     }
 }
