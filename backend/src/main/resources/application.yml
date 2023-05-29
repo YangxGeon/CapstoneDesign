@@ -15,3 +15,9 @@ logging.level:
 
 server:
   port: 8080
+
+security:
+  jwt:
+    token:
+      secret-key: a52e0f8022ac063968cbbd12964ad58a7f75073e052e1401e75cd9cdf17aad4cc358ed801bde1c0b12f546f927fa43e6cdcca6ce80cc4d03df21bc2f30ae3a5f
+      expire-length: 1800000
