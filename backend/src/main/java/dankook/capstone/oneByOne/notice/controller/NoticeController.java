@@ -29,7 +29,7 @@ public class NoticeController {
         return ResponseEntity.ok(notices);
     }
 
-    @GetMapping("/api/notices/{noticdeId}")
+    @GetMapping("/api/notices/{noticeId}")
     public ResponseEntity<Notice> getNotice(Long noticeId) {
         final Notice notice = noticeService.getNotice(noticeId);
         return ResponseEntity.ok(notice);
