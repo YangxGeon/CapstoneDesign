@@ -26,4 +26,9 @@ public class NoticeService {
     public List<Notice> getNotices(final Pageable pageable) {
         return noticeRepository.findAll(pageable).getContent();
     }
+
+    public Notice getNotice(final Long noticeId) {
+        return noticeRepository.findById(noticeId)
+                .orElseThrow(IllegalAccessError::new);
+    }
 }

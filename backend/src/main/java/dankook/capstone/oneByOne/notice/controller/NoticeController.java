@@ -28,4 +28,10 @@ public class NoticeController {
         final List<Notice> notices = noticeService.getNotices(pageable);
         return ResponseEntity.ok(notices);
     }
+
+    @GetMapping("/api/notices/{noticdeId}")
+    public ResponseEntity<Notice> getNotice(Long noticeId) {
+        final Notice notice = noticeService.getNotice(noticeId);
+        return ResponseEntity.ok(notice);
+    }
 }
