@@ -11,6 +11,7 @@ import Study from './pages/Study';
 import PostForm from './Components/PostForm';
 import Info from './pages/Info';
 import InfoDetail from './pages/InfoDetail';
+import CreateForm from "./pages/CreateForm";
 
 const Router = () => {
 	return (
@@ -25,6 +26,7 @@ const Router = () => {
 			<Route path='/study' element={<Study/>} />
 			<Route path='/mento' element={<Mento/>} />
 			<Route path='/project' element={<Project/>} />
+			<Route path='/createForm' element={<CreateForm/>} />
 		</Routes>
 	);
 };
