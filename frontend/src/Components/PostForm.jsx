@@ -20,6 +20,13 @@ const TitleBox = styled.input`
   font-size: 20px;
 `;
 
+const HashtagBox = styled.input`
+  width: 500px;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 15px;
+`;
+
 const ContentBox = styled.textarea`
   width: 500px;
   height: 300px;
@@ -29,13 +36,24 @@ const ContentBox = styled.textarea`
 
 const PostForm = () => {
   const [title, setTitle] = useState('');
+  const [hashtag, setHashtag] = useState('');
   const [content, setContent] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    let hashCount = 0;
+    let i;
     // 제목과 내용이 비어있는지 확인
     if (!title || !content) {
       alert('제목과 내용을 입력해주세요.');
+      return;
+    }
+    for (i = 0; i < hashtag.length; i++) {
+      if (hashtag[i] === '#')
+        hashCount++;
+    }
+    if (hashCount > 10) {
+      alert('해시태그는 10개 이하로 작성해주세요.');
       return;
     }
     if (title.length > 25) {
@@ -46,13 +64,13 @@ const PostForm = () => {
       alert('글 내용은 300자를 넘으면 안됩니다.');
       return;
     }
-    console.log(`Title: ${title}, Content: ${content}`);
+    console.log(`Title: ${title}, Hashtag : ${hashtag}, Content: ${content}`);
     try {
       // 스프링 백엔드 엔드포인트 URL
       const url = 'http://example.com/api/posts';
 
       // 데이터를 전송할 객체 생성
-      const data = { title, content };
+      const data = { title, hashtag, content };
 
       // POST 요청 전송
       const response = axios.post(url, data);
@@ -62,6 +80,7 @@ const PostForm = () => {
 
       // 게시글 추가 후 폼 초기화
       setTitle('');
+      setHashtag('');
       setContent('');
     } catch (error) {
       console.error(error);
@@ -80,6 +99,12 @@ const PostForm = () => {
             placeholder="제목"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
+          />
+          <HashtagBox
+            type="text"
+            placeholder="#해시태그"
+            value={hashtag}
+            onChange={(event) => setHashtag(event.target.value)}
           />
           <ContentBox
             placeholder="내용"

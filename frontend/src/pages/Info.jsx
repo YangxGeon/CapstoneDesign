@@ -24,17 +24,21 @@ const Body = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 `
 
 const NewBtn = styled.button`
   position: absolute;
-  right: 20px;
-  top: 230px;
+  right: 200px;
+  height: 50px;
+  cursor: pointer;
+  border: 1px solid #E2E2E2;
+  border-radius: 5px;
 `;
 
 const Content = styled.div`
-    width: 500px;
-    height: 60px;
+    width: 700px;
+    height: 50px;
     border: 1px solid #E2E2E2;
     border-radius: 5px;
     margin-bottom: 5px;
@@ -50,6 +54,14 @@ const ContentTitle = styled.div`
     left: 10px;
 `;
 
+const HashTage = styled.div`
+    position: absolute;
+    left: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 const Like = styled.div`
     font-size: 10px;
     position: absolute;
@@ -59,9 +71,9 @@ const Like = styled.div`
 function Info() {
 
     const posts = [
-        { id: 1, title: '첫 번째 게시글', like: 17 },
-        { id: 2, title: '두 번째 게시글', like: 19 },
-        { id: 3, title: '세 번째 게시글', like: 15 }
+        { id: 1, title: '첫 번째 게시글', hashtage: ['#친구찾음', '#친목', '#같이놀자'],like: 17 },
+        { id: 2, title: '두 번째 게시글', hashtage: ['#머신러닝', '#AI'], like: 19 },
+        { id: 3, title: '세 번째 게시글', hashtage: ['#정보공유'], like: 15 }
     ];
 
     return (
@@ -75,6 +87,7 @@ function Info() {
                 {posts.map(post => (
                     <Content key={post.id}>
                         <ContentTitle>{post.title}</ContentTitle>
+                        <HashTage>{post.hashtage}</HashTage>
                         <Like>❤️{post.like}</Like>
                     </Content>
                 ))}

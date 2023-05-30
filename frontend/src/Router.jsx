@@ -10,12 +10,14 @@ import Mento from './pages/Mento';
 import Study from './pages/Study';
 import PostForm from './Components/PostForm';
 import Info from './pages/Info';
+import InfoDetail from './pages/InfoDetail';
 
 const Router = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Home />} />
 			<Route path="/info" element={<Info />} />
+			<Route path="/info/detail" element={<InfoDetail />} />
 			<Route path="/SignIn" element={<SignIn />} />
 			<Route path="/SignUp" element={<JoinForm />} />
 			<Route path='/academicclub' element={<AcademicClub />} />
