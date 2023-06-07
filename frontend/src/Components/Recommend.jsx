@@ -19,8 +19,8 @@ const Header = styled.header`
     align-items: center;
     width: 100%;
     height: 20%;
-    border-bottom: 1px solid #E3E3E3;
-    background-color: #F2F2F2;
+    border-bottom: 1px solid #f7e6c4;
+    background-color: #f7e6c4;
 `
 
 const Content = styled.div`

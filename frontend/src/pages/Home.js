@@ -9,7 +9,7 @@ import Recommend from '../Components/Recommend';
 import Popular from '../Components/Popular';
 
 const Header = styled.div`
-  background-color: #f2f2f2;
+  background-color: #f1c376;
   height: 150px;
   border-bottom: 1px solid #d6d6d6;
   margin-top: 60px;
@@ -49,11 +49,11 @@ const Main = styled.div`
 
 const UserBox = styled.div`
   width: 200px;
-  background-color: #f9f9f9;
+  background-color: #f7e6c4;
   position: absolute;
   top: 20px;
   left: 0px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #f7e6c4;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -98,10 +98,10 @@ const UserComment = styled.div`
   position: absolute;
   width: 200px;
   height: 150px;
-  background-color: #f9f9f9;
+  background-color: #f7e6c4;
   top: 270px;
   left: 0px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #f7e6c4;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
