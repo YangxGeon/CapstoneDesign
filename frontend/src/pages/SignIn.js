@@ -22,12 +22,7 @@ import {
 } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styled from 'styled-components';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-// mui의 css 우선순위가 높기때문에 important를 설정 - 실무하다 보면 종종 발생 우선순위 문제
 const FormHelperTexts = styled(FormHelperText)`
   width: 100%;
   padding-left: 16px;
@@ -45,21 +40,20 @@ const SignIn = () => {
   const [idError, setIdError] = useState('');
   const history = useNavigate();
 
-  
-
   const onhandlePost = async (data) => {
-    const {password,id } = data;
-    const getData = { password,id };
+    const { password, id } = data;
+    const getData = { password, id };
 
     // post
     await axios
-      .post('http://localhost:8080/auth/register', {param : getData})
+      .post('http://localhost:8080/auth/register', { param: getData })
       .then(function (response) {
-        if (response.status === 200){
+        if (response.status === 201) {
           console.log(response, '성공');
           const token = response.data.token;
-          localStorage.setItem('jwtToken',token);
+          localStorage.setItem('jwtToken', token);
           history('/SignIn');
+        } else {
         }
       })
       .catch(function (err) {
@@ -72,9 +66,9 @@ const SignIn = () => {
     const data = new FormData(e.currentTarget);
     const joinData = {
       password: data.get('password'),
-      id : data.get('id'),
+      id: data.get('id'),
     };
-    const { password,id } = joinData;
+    const { password, id } = joinData;
 
     // id 공백 체크
     if (id == '') setIdError('Id를 입력해주세요.');
@@ -82,9 +76,7 @@ const SignIn = () => {
 
     console.log(joinData);
 
-    if (
-      checked
-    ) {
+    if (checked) {
       onhandlePost(joinData);
     }
   };
@@ -105,7 +97,12 @@ const SignIn = () => {
           <Typography component="h1" variant="h5">
             로그인
           </Typography>
-          <Boxs component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Boxs
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <FormControl component="fieldset" variant="standard">
               <Grid container spacing={2}>
                 <Grid item xs={12}>

@@ -1,22 +1,21 @@
-const http = require("http");
-const express = require("express");
-const path = require("path");
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
+const http = require('http'); // http 모듈 추가
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(express.json());
 app.use(cors());
 
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: 'localhost:3306',
   user: 'root',
-  password: 'password',
+  password: 'root',
   database: 'community_site',
 });
 
@@ -65,7 +64,8 @@ app.get('/comments/:postId', (req, res) => {
 // 댓글 추가
 app.post('/comments', (req, res) => {
   const { postId, content, authorId } = req.body;
-  const query = 'INSERT INTO comments (postId, content, authorId) VALUES (?, ?, ?)';
+  const query =
+    'INSERT INTO comments (postId, content, authorId) VALUES (?, ?, ?)';
 
   db.query(query, [postId, content, authorId], (error, results) => {
     if (error) {
@@ -92,32 +92,42 @@ app.get('/events', (req, res) => {
 // 이벤트 추가
 app.post('/events', (req, res) => {
   const { event_name, category, content, author_id } = req.body;
-  const query = 'INSERT INTO events (event_name, category, content, author_id) VALUES (?, ?, ?, ?)';
+  const query =
+    'INSERT INTO events (event_name, category, content, author_id) VALUES (?, ?, ?, ?)';
 
-  db.query(query, [event_name, category, content, author_id], (error, results) => {
-    if (error) {
-      console.error('이벤트 추가 오류:', error);
-      res.status(500).send('이벤트 추가에 실패했습니다.');
-    } else {
-      res.status(201).send('이벤트가 성공적으로 추가되었습니다.');
-    }
-  });
+  db.query(
+    query,
+    [event_name, category, content, author_id],
+    (error, results) => {
+      if (error) {
+        console.error('이벤트 추가 오류:', error);
+        res.status(500).send('이벤트 추가에 실패했습니다.');
+      } else {
+        res.status(201).send('이벤트가 성공적으로 추가되었습니다.');
+      }
+    },
+  );
 });
 
 // 사용자 회원가입
-app.post('/signup', async (req, res) => {
+app.post('http://localhost:3000/auth/signup', async (req, res) => {
   const { username, password, hashtag, birthday, email } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const query = 'INSERT INTO users (username, password, hashtag, birthday, email) VALUES (?, ?, ?, ?, ?)';
+  const query =
+    'INSERT INTO users (username, password, hashtag, birthday, email) VALUES (?, ?, ?, ?, ?)';
 
-  db.query(query, [username, hashedPassword, hashtag, birthday, email], (error, results) => {
-    if (error) {
-      console.error('회원가입 오류:', error);
-      res.status(500).send('회원가입에 실패했습니다.');
-    } else {
-      res.status(201).send('회원가입이 성공적으로 완료되었습니다.');
-    }
-  });
+  db.query(
+    query,
+    [username, hashedPassword, hashtag, birthday, email],
+    (error, results) => {
+      if (error) {
+        console.error('회원가입 오류:', error);
+        res.status(500).send('회원가입에 실패했습니다.');
+      } else {
+        res.status(201).send('회원가입이 성공적으로 완료되었습니다.');
+      }
+    },
+  );
 });
 
 // 사용자 로그인
@@ -147,26 +157,21 @@ app.post('/login', async (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`서버가 ${port}번 포트에서 실행 중입니다.`);
+app.get('/ping', (req, res) => {
+  res.send('pong');
 });
 
-app.get("/ping", (req, res) => {
-    res.send("pong");
-});
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.use(express.static(path.join(__dirname, "build")));
-
-app.get("/*", (req, res) => {
-res.set({
-    "Cache-Control": "no-cache, no-store, must-revalidate",
-    Pragma: "no-cache",
-    Date: Date.now()
-});
-res.sendFile(path.join(__dirname, "build", "index.html"));
+app.get('/*', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
+    Date: Date.now(),
+  });
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 http.createServer(app).listen(port, () => {
-  console.log(`app listening at ${port}`);
+  console.log(`서버가 ${port}번 포트에서 실행 중입니다.`);
 });
-

@@ -52,35 +52,52 @@ const Register = () => {
   const [birthdayError, setBirthdayError] = useState('');
   const [birth, setBirth] = useState(null);
   const history = useNavigate();
-  const [hash,setHash] = useState([]);
+  const [hash, setHash] = useState([]);
 
   const handleAgree = (event) => {
     setChecked(event.target.checked);
   };
+  const navigate = useNavigate();
 
-    //hashtag handling
-    const handleChange = (event) => {
-      const isChecked = event.currentTarget.checked;
-      const name = event.target.name;
+  //hashtag handling
+  const handleChange = (event) => {
+    const isChecked = event.currentTarget.checked;
+    const name = event.target.name;
 
-      if (isChecked) {
-          setHash([...hash, name]);
-      } else {
-          setHash(hash.filter(e => e !== name));
-      }
+    if (isChecked) {
+      setHash([...hash, name]);
+    } else {
+      setHash(hash.filter((e) => e !== name));
+    }
   };
-  
 
   const onhandlePost = async (data) => {
-    const { email, name, password,id,birthday,gender,nickname,hashtags } = data;
-    const getData = { email, name, password,id,birthday,gender,nickname,hashtags };
+    const { email, name, password, id, birthday, gender, nickname, hashtags } =
+      data;
+    const getData = {
+      email,
+      name,
+      password,
+      id,
+      birthday,
+      gender,
+      nickname,
+      hashtags,
+    };
 
     // get
     await axios
-      .get('http://localhost:8080/auth/register', {param : getData})
+      .post('http://localhost:3000/auth/signup', getData)
       .then(function (response) {
-        console.log(response, '성공');
-        history('/SignIn');
+        if (response.status == '201') {
+          alert('회원가입에 성공하였습니다');
+          navigate('/');
+        } else {
+          setRegisterError(
+            '회원가입에 실패하였습니다. 다시한번 확인해 주세요.',
+          );
+          navigate('/signup');
+        }
       })
       .catch(function (err) {
         console.log(err);
@@ -98,27 +115,43 @@ const Register = () => {
       name: data.get('name'),
       password: data.get('password'),
       rePassword: data.get('rePassword'),
-      id : data.get('id'),
-      birthday : dayjs(birth).format("YYYY-MM-DD"),
-      gender : data.get('gender'),
-      nickname : data.get('nickname'),
-      hashtags : hash,
+      id: data.get('id'),
+      birthday: dayjs(birth).format('YYYY-MM-DD'),
+      gender: data.get('gender'),
+      nickname: data.get('nickname'),
+      hashtags: hash,
     };
-    const { email, name, password, rePassword,id,birthday,gender,nickname,hashtags } = joinData;
+    const {
+      email,
+      name,
+      password,
+      rePassword,
+      id,
+      birthday,
+      gender,
+      nickname,
+      hashtags,
+    } = joinData;
 
     // 이메일 유효성 체크
-    const emailRegex = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (!emailRegex.test(email)) setEmailError('올바른 이메일 형식이 아닙니다.');
+    const emailRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (!emailRegex.test(email))
+      setEmailError('올바른 이메일 형식이 아닙니다.');
     else setEmailError('');
 
     // 비밀번호 유효성 체크
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
     if (!passwordRegex.test(password))
-      setPasswordState('숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!');
+      setPasswordState(
+        '숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!',
+      );
     else setPasswordState('');
 
     // 비밀번호 같은지 체크
-    if (password !== rePassword) setPasswordError('비밀번호가 일치하지 않습니다.');
+    if (password !== rePassword)
+      setPasswordError('비밀번호가 일치하지 않습니다.');
     else setPasswordError('');
 
     // id 공백 체크
@@ -131,11 +164,12 @@ const Register = () => {
 
     // 이름 유효성 검사
     const nameRegex = /^[가-힣a-zA-Z]+$/;
-    if (!nameRegex.test(name) || name.length < 1) setNameError('올바른 이름을 입력해주세요.');
+    if (!nameRegex.test(name) || name.length < 1)
+      setNameError('올바른 이름을 입력해주세요.');
     else setNameError('');
 
     // 회원가입 동의 체크
-    if (!checked) alert('회원가입 약관에 동의해주세요.');    
+    if (!checked) alert('회원가입 약관에 동의해주세요.');
 
     console.log(joinData);
 
@@ -166,7 +200,12 @@ const Register = () => {
           <Typography component="h1" variant="h5">
             회원가입
           </Typography>
-          <Boxs component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Boxs
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <FormControl component="fieldset" variant="standard">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -240,36 +279,73 @@ const Register = () => {
                 <FormHelperTexts>{idError}</FormHelperTexts>
                 <Grid item xs={12}>
                   <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Gender
+                    </FormLabel>
                     <RadioGroup
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
                     >
-                      <FormControlLabel id = 'gender' name = 'gender' value="female" control={<Radio />} label="Female" />
-                      <FormControlLabel id = 'gender' name = 'gender' value="male" control={<Radio />} label="Male" />
+                      <FormControlLabel
+                        id="gender"
+                        name="gender"
+                        value="female"
+                        control={<Radio />}
+                        label="Female"
+                      />
+                      <FormControlLabel
+                        id="gender"
+                        name="gender"
+                        value="male"
+                        control={<Radio />}
+                        label="Male"
+                      />
                     </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <FormGroup>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Hashtags</FormLabel>
-                    <FormControlLabel control={<Checkbox onChange={handleChange} name = 'label' />} label="Label" />
-                    <FormControlLabel control={<Checkbox onChange={handleChange} name = 'Black' />} label="Black" />
-                    <FormControlLabel control={<Checkbox onChange={handleChange} name = 'White' />} label="White" />
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Hashtags
+                    </FormLabel>
+                    <FormControlLabel
+                      control={
+                        <Checkbox onChange={handleChange} name="label" />
+                      }
+                      label="Label"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox onChange={handleChange} name="Black" />
+                      }
+                      label="Black"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox onChange={handleChange} name="White" />
+                      }
+                      label="White"
+                    />
                   </FormGroup>
                 </Grid>
                 <FormHelperTexts>{idError}</FormHelperTexts>
                 <Grid item xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="choose your birthday" value={birth} onChange={(newValue) => setBirth(newValue)} />
+                      <DatePicker
+                        label="choose your birthday"
+                        value={birth}
+                        onChange={(newValue) => setBirth(newValue)}
+                      />
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
-                    control={<Checkbox onChange={handleAgree} color="primary" />}
+                    control={
+                      <Checkbox onChange={handleAgree} color="primary" />
+                    }
                     label="회원가입 약관에 동의합니다."
                   />
                 </Grid>
