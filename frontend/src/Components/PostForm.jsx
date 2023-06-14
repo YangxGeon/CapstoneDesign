@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from './Navbar';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate,useLocation } from 'react-router-dom';
 
 const Body = styled.body`
   margin-top: 200px;
@@ -38,8 +39,13 @@ const PostForm = () => {
   const [title, setTitle] = useState('');
   const [hashtag, setHashtag] = useState('');
   const [content, setContent] = useState('');
-
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const category = params.get('category');
+  
+  const handleSubmit = async (event) => {
+    console.log(category);
     event.preventDefault();
     let hashCount = 0;
     let i;
@@ -49,8 +55,7 @@ const PostForm = () => {
       return;
     }
     for (i = 0; i < hashtag.length; i++) {
-      if (hashtag[i] === '#')
-        hashCount++;
+      if (hashtag[i] === '#') hashCount++;
     }
     if (hashCount > 10) {
       alert('해시태그는 10개 이하로 작성해주세요.');
@@ -65,15 +70,16 @@ const PostForm = () => {
       return;
     }
     console.log(`Title: ${title}, Hashtag : ${hashtag}, Content: ${content}`);
+
     try {
-      // 스프링 백엔드 엔드포인트 URL
-      const url = 'http://example.com/api/posts';
+      // 백엔드 엔드포인트 URL
+      const url = `/api/posts/create?category=${category}`;
 
       // 데이터를 전송할 객체 생성
-      const data = { title, hashtag, content };
+      const data = { title, hashtag, content, };
 
       // POST 요청 전송
-      const response = axios.post(url, data);
+      const response = await axios.post(url, data);
 
       // 응답 처리
       console.log(response.data);
@@ -82,16 +88,19 @@ const PostForm = () => {
       setTitle('');
       setHashtag('');
       setContent('');
+      if ( response.status === 201){
+        alert('게시글 추가 완료')
+        navigate("/");
+      }
     } catch (error) {
       console.error(error);
       alert('게시글 추가에 실패했습니다.');
     }
   };
-  
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <Body>
         <Form onSubmit={handleSubmit}>
           <TitleBox

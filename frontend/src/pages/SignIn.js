@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import dayjs from 'dayjs';
 import {
   Avatar,
   Button,
   CssBaseline,
   TextField,
   FormControl,
-  FormControlLabel,
-  Checkbox,
   FormHelperText,
   Grid,
   Box,
   Typography,
   Container,
-  RadioGroup,
-  FormLabel,
-  Radio,
-  FormGroup,
 } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styled from 'styled-components';
@@ -36,48 +29,50 @@ const Boxs = styled(Box)`
 
 const SignIn = () => {
   const theme = createTheme();
-  const [checked, setChecked] = useState(false);
-  const [idError, setIdError] = useState('');
-  const history = useNavigate();
+  const [checked, setChecked] = useState(true);
+  const [usernameError, setUsernameError] = useState('');
+  const navigate = useNavigate();
 
-  const onhandlePost = async (data) => {
-    const { password, id } = data;
-    const getData = { password, id };
-
-    // post
-    await axios
-      .post('http://localhost:8080/auth/register', { param: getData })
-      .then(function (response) {
-        if (response.status === 201) {
-          console.log(response, '성공');
-          const token = response.data.token;
-          localStorage.setItem('jwtToken', token);
-          history('/SignIn');
-        } else {
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
+  const handlePost = async (data) => {
+    const { password, username } = data;
+    const postData = { password, username };
+    console.log("Post");
+    try {
+      const response = await axios.post('http://localhost:4000/auth/login', postData);
+      console.log(response);
+      if (response.status === 200) {
+        console.log(response, '성공');
+        const token = response.data.token;
+        localStorage.setItem('jwtToken', token);
+        navigate('/');
+      } 
+    } catch (error) {
+      if (error.response.status === 401) {
+        alert('로그인에 실패했습니다.');
+        navigate('/signin');
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    console.log(data);
     const joinData = {
       password: data.get('password'),
-      id: data.get('id'),
+      username: data.get('username'),
     };
-    const { password, id } = joinData;
+    const { password, username } = joinData;
 
-    // id 공백 체크
-    if (id == '') setIdError('Id를 입력해주세요.');
-    else setIdError('');
+    // username 공백 체크
+    if (username.trim() === '') {
+      setUsernameError('Username을 입력해주세요.');
+    } else {
+      setUsernameError('');
 
-    console.log(joinData);
-
-    if (checked) {
-      onhandlePost(joinData);
+      if (checked) {
+        handlePost(joinData);
+      }
     }
   };
 
@@ -109,13 +104,13 @@ const SignIn = () => {
                   <TextField
                     required
                     fullWidth
-                    id="id"
-                    name="id"
+                    id="username"
+                    name="username"
                     label="아이디"
-                    error={idError !== '' || false}
+                    error={usernameError !== ''}
                   />
+                  {usernameError && <FormHelperTexts>{usernameError}</FormHelperTexts>}
                 </Grid>
-                <FormHelperTexts>{idError}</FormHelperTexts>
                 <Grid item xs={12}>
                   <TextField
                     required

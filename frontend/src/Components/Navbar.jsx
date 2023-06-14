@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+
 const Header = styled.header`
   z-index: 10;
   width: 100%;
@@ -67,7 +68,7 @@ const LogoutBtn = styled.button`
   cursor: pointer;
 `;
 
-function Navbar() {
+function Navbar({ category }) {
   const history = useNavigate();
 
   // 로컬 스토리지에서 JWT 토큰 가져오기
@@ -87,19 +88,19 @@ function Navbar() {
       </Logo>
       <Nav>
         <Menu>
-          <Link to="/info">정보공유 모여</Link>
+          <Link to="/posts?category=info">정보공유 모여</Link>
         </Menu>
         <Menu>
-          <Link to="/academicclub">동아리 모여</Link>
+          <Link to="/posts?category=academicclub">동아리 모여</Link>
         </Menu>
         <Menu>
-          <Link to="/study">스터디 모여</Link>
+          <Link to="/posts?category=study">스터디 모여</Link>
         </Menu>
         <Menu>
-          <Link to="/project">프로젝트 모여</Link>
+          <Link to="/posts?category=project">프로젝트 모여</Link>
         </Menu>
         <Menu>
-          <Link to="/mento">멘토멘티 모여</Link>
+          <Link to="/posts?category=mento">멘토멘티 모여</Link>
         </Menu>
       </Nav>
       {!token || token === 'undefined' ? (

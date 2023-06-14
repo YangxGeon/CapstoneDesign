@@ -72,13 +72,13 @@ const Register = () => {
   };
 
   const onhandlePost = async (data) => {
-    const { email, name, password, id, birthday, gender, nickname, hashtags } =
+    const { email, name, password, username, birthday, gender, nickname, hashtags } =
       data;
     const getData = {
       email,
       name,
       password,
-      id,
+      username,
       birthday,
       gender,
       nickname,
@@ -87,7 +87,7 @@ const Register = () => {
 
     // get
     await axios
-      .post('http://localhost:3000/auth/signup', getData)
+      .post('http://localhost:4000/auth/signup', getData)
       .then(function (response) {
         if (response.status == '201') {
           alert('회원가입에 성공하였습니다');
@@ -115,7 +115,7 @@ const Register = () => {
       name: data.get('name'),
       password: data.get('password'),
       rePassword: data.get('rePassword'),
-      id: data.get('id'),
+      username : data.get('id'),
       birthday: dayjs(birth).format('YYYY-MM-DD'),
       gender: data.get('gender'),
       nickname: data.get('nickname'),
@@ -126,7 +126,7 @@ const Register = () => {
       name,
       password,
       rePassword,
-      id,
+      username,
       birthday,
       gender,
       nickname,
@@ -155,7 +155,7 @@ const Register = () => {
     else setPasswordError('');
 
     // id 공백 체크
-    if (id == '') setIdError('Id를 입력해주세요.');
+    if (username == '') setIdError('Id를 입력해주세요.');
     else setIdError('');
 
     // birthday 공백 체크
