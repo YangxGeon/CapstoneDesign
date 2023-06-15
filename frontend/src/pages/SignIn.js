@@ -35,17 +35,20 @@ const SignIn = () => {
 
   const handlePost = async (data) => {
     const { password, username } = data;
+    console.log(data);
     const postData = { password, username };
-    console.log("Post");
+    console.log('Post');
     try {
-      const response = await axios.post('http://localhost:4000/auth/login', postData);
-      console.log(response);
+      const response = await axios.post(
+        'http://localhost:4000/auth/login',
+        postData,
+      );
       if (response.status === 200) {
         console.log(response, '성공');
         const token = response.data.token;
         localStorage.setItem('jwtToken', token);
         navigate('/');
-      } 
+      }
     } catch (error) {
       if (error.response.status === 401) {
         alert('로그인에 실패했습니다.');
@@ -109,7 +112,9 @@ const SignIn = () => {
                     label="아이디"
                     error={usernameError !== ''}
                   />
-                  {usernameError && <FormHelperTexts>{usernameError}</FormHelperTexts>}
+                  {usernameError && (
+                    <FormHelperTexts>{usernameError}</FormHelperTexts>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField

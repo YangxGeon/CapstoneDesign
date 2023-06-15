@@ -7,6 +7,8 @@ import Project from '../Components/Project';
 import Mento from '../Components/Mento';
 import Recommend from '../Components/Recommend';
 import Popular from '../Components/Popular';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Header = styled.div`
   background-color: #f1c376;
@@ -156,6 +158,41 @@ const Name = styled.div`
 `;
 
 const Home = () => {
+  const [userId, setUserId] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const history = useNavigate();
+  // 로컬 스토리지에서 JWT 토큰 가져오기
+  const token = localStorage.getItem('jwtToken');
+  useEffect(() => {
+    // 서버에서 로그인 정보 요청
+    fetch('/api/fetchUserId', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`, // 로컬 스토리지에서 토큰 가져옴
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setUserId(data.userId))
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    if (userId !== null && userId !== undefined) {
+      // 서버에서 유저 정보 요청
+      fetch(`/api/user/${userId}`)
+        .then((response) => response.json())
+        .then((data) => setUserInfo(data))
+        .catch((error) => console.error(error));
+    }
+  }, [userId]);
+
+  const handleLogout = () => {
+    // 토큰 삭제
+    localStorage.removeItem('jwtToken');
+    setUserInfo(null);
+    // 홈 화면으로 리디렉션
+    history('/');
+  };
+
   return (
     <>
       <Navbar></Navbar>
@@ -167,36 +204,40 @@ const Home = () => {
       </Header>
       <Body>
         <Main>
-          <UserBox>
-            <UesrImg>
-              <img src="img/user.png" height="50px" width="50px"></img>
-            </UesrImg>
-            <UserNickname>닉네임</UserNickname>
-            <UserNameEmail>
-              <Name>이름</Name>
-              <div>이메일</div>
-            </UserNameEmail>
-            <UserBtnBox>
-              <UserBtn>내 정보</UserBtn>
-              <UserBtn>로그아웃</UserBtn>
-            </UserBtnBox>
-          </UserBox>
-          <UserComment>
-            <CommentBox>
-              <img src="img/writing.png" height="25px" width="25px"></img>
-              <Comment>내가 쓴 글</Comment>
-            </CommentBox>
-            <Line></Line>
-            <CommentBox>
-              <img src="img/comments.png" height="25px" width="25px"></img>
-              <Comment>댓글 단 글</Comment>
-            </CommentBox>
-            <Line></Line>
-            <CommentBox>
-              <img src="img/star.png" height="25px" width="25px"></img>
-              <Comment>내 스크랩</Comment>
-            </CommentBox>
-          </UserComment>
+          {userInfo && (
+            <UserBox>
+              <UesrImg>
+                <img src="img/user.png" height="50px" width="50px"></img>
+              </UesrImg>
+              <UserNickname>{userInfo?.nickname}</UserNickname>
+              <UserNameEmail>
+                <Name>{userInfo?.name}</Name>
+                <div>{userInfo?.email}</div>
+              </UserNameEmail>
+              <UserBtnBox>
+                <UserBtn>내 정보</UserBtn>
+                <UserBtn onClick={handleLogout}>로그아웃</UserBtn>
+              </UserBtnBox>
+            </UserBox>
+          )}
+          {userInfo && (
+            <UserComment>
+              <CommentBox>
+                <img src="img/writing.png" height="25px" width="25px"></img>
+                <Comment>내가 쓴 글</Comment>
+              </CommentBox>
+              <Line></Line>
+              <CommentBox>
+                <img src="img/comments.png" height="25px" width="25px"></img>
+                <Comment>댓글 단 글</Comment>
+              </CommentBox>
+              <Line></Line>
+              <CommentBox>
+                <img src="img/star.png" height="25px" width="25px"></img>
+                <Comment>내 스크랩</Comment>
+              </CommentBox>
+            </UserComment>
+          )}
           <AcademicClub></AcademicClub>
           <Study></Study>
           <Project></Project>
