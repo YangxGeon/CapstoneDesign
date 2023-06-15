@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate,useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Body = styled.body`
   margin-top: 200px;
@@ -43,7 +44,9 @@ const PostForm = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const category = params.get('category');
-  
+  const userId = localStorage.getItem('userID');
+  const userInfo = localStorage.getItem('userInfo');
+  console.log(userInfo);
   const handleSubmit = async (event) => {
     console.log(category);
     event.preventDefault();
@@ -76,7 +79,7 @@ const PostForm = () => {
       const url = `/api/posts/create?category=${category}`;
 
       // 데이터를 전송할 객체 생성
-      const data = { title, hashtag, content, };
+      const data = { title, hashtag, content, userId, userInfo};
 
       // POST 요청 전송
       const response = await axios.post(url, data);

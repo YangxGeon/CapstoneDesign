@@ -20,6 +20,9 @@ function EventDetail() {
   const handleParticipate = () => {
     // 로그인 상태 확인
     const token = localStorage.getItem('jwtToken');
+    const savedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = JSON.parse(savedUserInfo);
+    console.log(userInfo);
     const isLoggedIn = !!token;
 
     if (isLoggedIn) {

@@ -82,10 +82,11 @@ app.get('/api/posts/detail/:postId', (req, res) => {
         id: post.id,
         title: post.title,
         content: post.content,
-        authorId: post.author_id,
+        authorId: post.authorId,
+        authorInfo: post.authorInfo,
         hashtags: post.hashtags,
         likes: post.likes,
-        createdAt: post.createdAt,
+        createdAt: post.created_at,
         // Include any other fields you want to send
       };
 
@@ -96,19 +97,23 @@ app.get('/api/posts/detail/:postId', (req, res) => {
 
 // 게시글 추가
 app.post('/api/posts/create', (req, res) => {
-  const { title, content, hashtag } = req.body;
+  const { title, content, hashtag, userId, userInfo } = req.body;
   const { category } = req.query;
   const query =
-    'INSERT INTO posts (title, content, category, hashtags) VALUES (?, ?, ?, ?)';
+    'INSERT INTO posts (title, content, category, hashtags, authorId, authorInfo) VALUES (?, ?, ?, ?, ?, ?)';
 
-  db.query(query, [title, content, category, hashtag], (error, results) => {
-    if (error) {
-      console.error('게시글 추가 오류:', error);
-      res.status(500).send('게시글 추가에 실패했습니다.');
-    } else {
-      res.status(201).send('게시글이 성공적으로 추가되었습니다.');
-    }
-  });
+  db.query(
+    query,
+    [title, content, category, hashtag, userId, userInfo],
+    (error, results) => {
+      if (error) {
+        console.error('게시글 추가 오류:', error);
+        res.status(500).send('게시글 추가에 실패했습니다.');
+      } else {
+        res.status(201).send('게시글이 성공적으로 추가되었습니다.');
+      }
+    },
+  );
 });
 
 // 댓글 조회

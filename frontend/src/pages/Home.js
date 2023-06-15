@@ -182,12 +182,21 @@ const Home = () => {
         .then((response) => response.json())
         .then((data) => setUserInfo(data))
         .catch((error) => console.error(error));
+      localStorage.setItem('userID', userId);
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (userInfo !== null && userInfo !== undefined) {
+      localStorage.setItem('userInfo', userInfo.nickname);
+    }
+  }, [userInfo]);
 
   const handleLogout = () => {
     // 토큰 삭제
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('userID');
     setUserInfo(null);
     // 홈 화면으로 리디렉션
     history('/');
