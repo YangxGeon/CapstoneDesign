@@ -9,8 +9,8 @@ const ContentBox = styled.div`
     border: 1px solid #E3E3E3;
     border-radius: 5px;
     position: absolute;
-    top: 330px;
-    left: 230px;
+    top: 80px;
+    left: 770px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,13 +49,13 @@ const Time = styled.div`
     font-size: 13px;
 `
 
-function Project() {
+function Info() {
 
     const [posts, setPosts] = useState([]);
     useEffect(() => {
       const fetchPosts = async () => {
         try {
-          const response = await axios.get(`/api/posts/project`);
+          const response = await axios.get(`/api/posts/info`);
           setPosts(response.data.slice(0, 4));
         } catch (error) {
           console.error('게시판 목록 조회 오류:', error);
@@ -93,7 +93,7 @@ function Project() {
     return (
         <>
             <ContentBox>
-                <Header><Link to="/posts?category=project">프로젝트 모여 최신 게시글</Link></Header>
+                <Header><Link to="/posts?category=info">정보공유 모여 최신 게시글</Link></Header>
                 {posts.map((post) => (
                     <Content>
                         <Link to={`/post/detail?postId=${post.id}`} key={post.id}>
@@ -107,4 +107,4 @@ function Project() {
     )
 }
 
-export default Project;
+export default Info;

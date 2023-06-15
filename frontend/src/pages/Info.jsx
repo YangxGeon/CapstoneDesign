@@ -5,7 +5,7 @@ import { Link,useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Header = styled.div`
-  background-color: #f2f2f2;
+  background-color: #f1c376;
   height: 150px;
   border-bottom: 1px solid #d6d6d6;
   margin-top: 60px;
@@ -41,13 +41,13 @@ const NewBtn = styled.button`
 const Content = styled.div`
   width: 700px;
   height: 50px;
-  border: 1px solid #e2e2e2;
+  border: 1px solid #F7E6C4;
   border-radius: 5px;
   margin-bottom: 5px;
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #e2e2e2;
+  background-color: #F7E6C4;
 `;
 
 const ContentTitle = styled.div`

@@ -43,12 +43,11 @@ const db = mysql.createConnection({
 // 게시판 목록 조회
 app.get('/api/posts/:category', (req, res) => {
   const category = req.params.category; // 카테고리 정보 받기
-  console.log(category);
 
   let query = 'SELECT * FROM posts'; // 기본 쿼리
 
   if (category) {
-    query += ` WHERE category = '${category}'`; // 카테고리 정보가 있는 경우 WHERE 절 추가
+    query += ` WHERE category = '${category}' order by id desc`; // 카테고리 정보가 있는 경우 WHERE 절 추가, 최신 순
   }
 
   db.query(query, (error, results) => {
@@ -64,7 +63,6 @@ app.get('/api/posts/:category', (req, res) => {
 //게시글 상세정보 조회
 app.get('/api/posts/detail/:postId', (req, res) => {
   const postId = req.params.postId;
-  console.log(postId);
 
   // Query the database to fetch the post details based on the postId
   const query = 'SELECT * FROM posts WHERE id = ?';
@@ -134,12 +132,12 @@ app.get('/api/posts/:postId/comments', (req, res) => {
 // POST /api/posts/:postId/comments 라우트 핸들러 - 댓글 작성
 app.post('/api/posts/:postId/comments', (req, res) => {
   const postId = req.params.postId;
-  const { text } = req.body;
+  const { text, userInfo } = req.body;
 
   // 댓글 삽입 쿼리 실행
   db.query(
-    'INSERT INTO comments (postId, text) VALUES (?, ?)',
-    [postId, text],
+    'INSERT INTO comments (postId, text, authorInfo) VALUES (?, ?, ?)',
+    [postId, text, userInfo],
     (err, result) => {
       if (err) {
         console.error('Error inserting comment:', err);
@@ -212,7 +210,6 @@ app.post('/events', (req, res) => {
 });
 // 사용자 회원가입
 app.post('/auth/signup', async (req, res) => {
-  console.log(req.body);
   const {
     email,
     name,

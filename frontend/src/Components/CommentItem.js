@@ -29,17 +29,28 @@ const NestedCommentItem = ({ nestedComment }) => {
   return <li>{nestedComment.text}</li>;
 };
 
-const CommentItem = ({ comment, handleNestedCommentSubmit, handleNestedCommentTextChange }) => {
-  console.log(comment);  
+const CommentItem = ({
+  comment,
+  handleNestedCommentSubmit,
+  handleNestedCommentTextChange,
+}) => {
   return (
     <CommentWrapper>
-      <CommentContent>{comment.text}</CommentContent>
-      <NestedCommentForm onSubmit={(e) => handleNestedCommentSubmit(e, comment.id)}>
-      </NestedCommentForm>
+      <CommentContent>
+        작성자 : {comment.authorInfo}
+        <br></br>
+        {comment.text}
+      </CommentContent>
+      <NestedCommentForm
+        onSubmit={(e) => handleNestedCommentSubmit(e, comment.id)}
+      ></NestedCommentForm>
       {comment.nestedComments && comment.nestedComments.length > 0 && (
         <ul>
           {comment.nestedComments.map((nestedComment) => (
-            <NestedCommentItem key={nestedComment.id} nestedComment={nestedComment} />
+            <NestedCommentItem
+              key={nestedComment.id}
+              nestedComment={nestedComment}
+            />
           ))}
         </ul>
       )}

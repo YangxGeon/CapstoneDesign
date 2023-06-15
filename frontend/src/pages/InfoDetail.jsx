@@ -96,6 +96,7 @@ function InfoDetail() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const postId = params.get('postId');
+  const userInfo = localStorage.getItem('userInfo');
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -116,6 +117,7 @@ function InfoDetail() {
       try {
         const response = await axios.get(`/api/posts/${postId}/comments`);
         const commentsData = response.data;
+        console.log(commentsData);
         setPost((prevPost) => {
           return {
             ...prevPost,
@@ -135,6 +137,7 @@ function InfoDetail() {
     try {
       const response = await axios.post(`/api/posts/${postId}/comments`, {
         text: commentText,
+        userInfo: userInfo
       });
       console.log(response);
       const newComment = response.data.text;

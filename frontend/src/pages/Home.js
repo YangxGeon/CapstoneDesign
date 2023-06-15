@@ -5,7 +5,7 @@ import AcademicClub from '../Components/AcademicClub';
 import Study from '../Components/Study';
 import Project from '../Components/Project';
 import Mento from '../Components/Mento';
-import Recommend from '../Components/Recommend';
+import Info from '../Components/Info';
 import Popular from '../Components/Popular';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -261,7 +261,7 @@ const Home = () => {
               ></img>
             </SearchImg>
           </SearchBox>
-          <Recommend></Recommend>
+          <Info></Info>
           <Popular></Popular>
         </Main>
       </Body>
