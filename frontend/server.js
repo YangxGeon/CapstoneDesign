@@ -11,23 +11,32 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const corsOptions = {
   origin: 'http://localhost:4000',
-  credentials : true,
-}
+  credentials: true,
+};
 // Body parser 설정
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.listen(PORT, () => {
-	console.log(`Server on : http://localhost:${PORT}/`);
-})
+  console.log(`Server on : http://localhost:${PORT}/`);
+});
 
 app.use(express.json());
 app.use(cors(corsOptions));
 
+//김건우 DB
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: 'rlarjsdn99',
+//   database: 'community',
+// });
+
+//박민규 DB
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'rlarjsdn99',
+  password: 'brian1026',
   database: 'community',
 });
 
@@ -52,11 +61,10 @@ app.get('/api/posts/:category', (req, res) => {
   });
 });
 
-
 //게시글 상세정보 조회
 app.get('/api/posts/detail/:postId', (req, res) => {
   const postId = req.params.postId;
-  console.log(postId)
+  console.log(postId);
 
   // Query the database to fetch the post details based on the postId
   const query = 'SELECT * FROM posts WHERE id = ?';
@@ -74,10 +82,11 @@ app.get('/api/posts/detail/:postId', (req, res) => {
         id: post.id,
         title: post.title,
         content: post.content,
-        authorId: post.author_id,
+        authorId: post.authorId,
+        authorInfo: post.authorInfo,
         hashtags: post.hashtags,
         likes: post.likes,
-        createdAt: post.createdAt,
+        createdAt: post.created_at,
         // Include any other fields you want to send
       };
 
@@ -88,18 +97,23 @@ app.get('/api/posts/detail/:postId', (req, res) => {
 
 // 게시글 추가
 app.post('/api/posts/create', (req, res) => {
-  const { title, content, authorId,hashtag } = req.body;
+  const { title, content, hashtag, userId, userInfo } = req.body;
   const { category } = req.query;
-  const query = 'INSERT INTO posts (title, content, author_id, category,hashtags) VALUES (?, ?, ?, ?,?)';
+  const query =
+    'INSERT INTO posts (title, content, category, hashtags, authorId, authorInfo) VALUES (?, ?, ?, ?, ?, ?)';
 
-  db.query(query, [title, content, authorId, category, hashtag], (error, results) => {
-    if (error) {
-      console.error('게시글 추가 오류:', error);
-      res.status(500).send('게시글 추가에 실패했습니다.');
-    } else {
-      res.status(201).send('게시글이 성공적으로 추가되었습니다.');
-    }
-  });
+  db.query(
+    query,
+    [title, content, category, hashtag, userId, userInfo],
+    (error, results) => {
+      if (error) {
+        console.error('게시글 추가 오류:', error);
+        res.status(500).send('게시글 추가에 실패했습니다.');
+      } else {
+        res.status(201).send('게시글이 성공적으로 추가되었습니다.');
+      }
+    },
+  );
 });
 
 // 댓글 조회
@@ -116,8 +130,6 @@ app.get('/api/posts/:postId/comments', (req, res) => {
     }
   });
 });
-
-
 
 // POST /api/posts/:postId/comments 라우트 핸들러 - 댓글 작성
 app.post('/api/posts/:postId/comments', (req, res) => {
@@ -137,33 +149,35 @@ app.post('/api/posts/:postId/comments', (req, res) => {
         const newComment = { id: newCommentId, postId, text };
         res.json(newComment);
       }
-    }
+    },
   );
 });
 
 // POST /api/posts/:postId/comments/:commentId/nested-comments 라우트 핸들러 - 대댓글 작성
-app.post('/api/posts/:postId/comments/:commentId/nested-comments', (req, res) => {
-  const postId = req.params.postId;
-  const commentId = req.params.commentId;
-  const { text } = req.body;
+app.post(
+  '/api/posts/:postId/comments/:commentId/nested-comments',
+  (req, res) => {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const { text } = req.body;
 
-  // 대댓글 삽입 쿼리 실행
-  db.query(
-    'INSERT INTO nested_comments (commentId, text) VALUES (?, ?)',
-    [commentId, text],
-    (err, result) => {
-      if (err) {
-        console.error('Error inserting nested comment:', err);
-        res.status(500).json({ error: 'Error inserting nested comment' });
-      } else {
-        const newNestedCommentId = result.insertId;
-        const newNestedComment = { id: newNestedCommentId, commentId, text };
-        res.json(newNestedComment);
-      }
-    }
-  );
-});
-
+    // 대댓글 삽입 쿼리 실행
+    db.query(
+      'INSERT INTO nested_comments (commentId, text) VALUES (?, ?)',
+      [commentId, text],
+      (err, result) => {
+        if (err) {
+          console.error('Error inserting nested comment:', err);
+          res.status(500).json({ error: 'Error inserting nested comment' });
+        } else {
+          const newNestedCommentId = result.insertId;
+          const newNestedComment = { id: newNestedCommentId, commentId, text };
+          res.json(newNestedComment);
+        }
+      },
+    );
+  },
+);
 
 // 이벤트 목록 조회
 app.get('/events', (req, res) => {
@@ -199,14 +213,23 @@ app.post('/events', (req, res) => {
 // 사용자 회원가입
 app.post('/auth/signup', async (req, res) => {
   console.log(req.body);
-  const { email, name, username, password, hashtags, birthday } = req.body;
+  const {
+    email,
+    name,
+    username,
+    password,
+    hashtags,
+    birthday,
+    gender,
+    nickname,
+  } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const query =
-    'INSERT INTO users (email, name, username, password, birthday) VALUES (?, ?, ?, ?, ?)';
+    'INSERT INTO users (email, name, username, password, birthday, gender, nickname) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
   db.query(
     query,
-    [email, name, username, hashedPassword, birthday],
+    [email, name, username, hashedPassword, birthday, gender, nickname],
     (error, results) => {
       if (error) {
         console.error('회원가입 오류:', error);
@@ -252,6 +275,41 @@ app.post('/auth/login', async (req, res) => {
           res.status(401).send('비밀번호가 올바르지 않습니다.');
         }
       }
+    }
+  });
+});
+
+// 유저ID를 반환하는 API
+app.get('/api/fetchUserId', (req, res) => {
+  // 토큰 검증 로직
+  const token = req.headers.authorization.split(' ')[1]; // Authorization 헤더에서 토큰 추출
+  const secretKey = 'secretKey'; // JWT 토큰 서명에 사용된 비밀 키
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    const userInfo = {
+      userId: decoded.id,
+    };
+    res.json(userInfo);
+  } catch (error) {
+    res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
+  }
+});
+
+// 유저 정보를 반환하는 API
+app.get('/api/user/:userId', (req, res) => {
+  const userId = req.params.userId; // URL 매개변수로부터 userId 가져오기
+  // SQL 쿼리
+  const sql = 'SELECT email, name, gender, nickname FROM users WHERE id = ?';
+
+  // 쿼리 실행
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: '데이터베이스 오류' });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: '유저를 찾을 수 없습니다.' });
+    } else {
+      const userInfo = results[0];
+      res.json(userInfo);
     }
   });
 });

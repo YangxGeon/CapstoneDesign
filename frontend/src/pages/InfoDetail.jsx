@@ -195,7 +195,7 @@ function InfoDetail() {
             <TitleAndContent>
               <ContentInfo>
                 <Info>
-                  <span>{post.author}</span>
+                  <span>작성자 : {post.authorInfo}</span>
                   <span>{post.createdAt}</span>
                 </Info>
               </ContentInfo>

@@ -77,8 +77,11 @@ function Navbar({ category }) {
   const handleLogout = () => {
     // 토큰 삭제
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('userID');
     // 홈 화면으로 리디렉션
     history('/');
+    window.location.reload();
   };
 
   return (
