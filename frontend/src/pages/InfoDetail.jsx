@@ -3,6 +3,7 @@ import Navbar from '../Components/Navbar';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import CommentItem from '../Components/CommentItem';
 
 const Body = styled.div`
   margin-top: 200px;
@@ -88,26 +89,6 @@ const CommentList = styled.ul`
   padding: 0;
 `;
 
-const CommentItem = styled.li`
-  margin-bottom: 10px;
-`;
-
-const NestedCommentForm = styled.form`
-  margin-left: 20px;
-`;
-
-const NestedCommentInput = styled.input`
-  margin-bottom: 5px;
-  padding: 3px;
-`;
-
-const NestedCommentButton = styled.button`
-  padding: 3px 6px;
-  background-color: #f0f0f0;
-  border: none;
-  cursor: pointer;
-`;
-
 function InfoDetail() {
   const [post, setPost] = useState(null);
   const [commentText, setCommentText] = useState('');
@@ -130,6 +111,25 @@ function InfoDetail() {
     fetchPost();
   }, [postId]);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`/api/posts/${postId}/comments`);
+        const commentsData = response.data;
+        setPost((prevPost) => {
+          return {
+            ...prevPost,
+            comments: commentsData,
+          };
+        });
+      } catch (error) {
+        console.error('댓글 정보 가져오기 오류:', error);
+      }
+    };
+
+    fetchComments();
+  }, [postId]);
+
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -138,20 +138,20 @@ function InfoDetail() {
       });
       console.log(response);
       const newComment = response.data.text;
-  
-      // 이전 상태(prevPost) 대신에 이전 상태를 참조하는 함수(prevPost)를 사용하여 상태 업데이트
+
       setPost((prevPost) => {
         return {
           ...prevPost,
-          comments: [...prevPost.comments, newComment],
+          comments: [...(prevPost.comments || []), newComment],
         };
       });
       setCommentText('');
+      window.location.reload();
     } catch (error) {
       console.error('댓글 추가 오류:', error);
     }
   };
-  
+
   const handleNestedCommentSubmit = async (event, commentId) => {
     event.preventDefault();
     try {
@@ -162,25 +162,25 @@ function InfoDetail() {
         }
       );
       const newNestedComment = response.data;
-  
-      // 이전 상태(prevPost) 대신에 이전 상태를 참조하는 함수(prevPost)를 사용하여 상태 업데이트
+
       setPost((prevPost) => {
         const updatedComments = prevPost.comments.map((comment) => {
           if (comment.id === commentId) {
             return {
               ...comment,
-              nestedComments: [...comment.nestedComments, newNestedComment],
+              nestedComments: [...(comment.nestedComments || []), newNestedComment],
             };
           }
           return comment;
         });
-  
+
         return {
           ...prevPost,
           comments: updatedComments,
         };
       });
       setNestedCommentText('');
+      window.location.reload();
     } catch (error) {
       console.error('대댓글 추가 오류:', error);
     }
@@ -214,29 +214,17 @@ function InfoDetail() {
                 <CommentButton type="submit">댓글 추가</CommentButton>
               </CommentForm>
               <CommentList>
-                {post.comments && post.comments.map((comment) => (
-                  <CommentItem key={comment.id}>
-                    <div>{comment.text}</div>
-                    <NestedCommentForm
-                      onSubmit={(e) => handleNestedCommentSubmit(e, comment.id)}
-                    >
-                      <NestedCommentInput
-                        type="text"
-                        placeholder="대댓글을 입력하세요"
-                        value={nestedCommentText}
-                        onChange={(e) => setNestedCommentText(e.target.value)}
-                      />
-                      <NestedCommentButton type="submit">
-                        대댓글 추가
-                      </NestedCommentButton>
-                    </NestedCommentForm>
-                    <ul>
-                      {comment.nestedComments.map((nestedComment) => (
-                        <li key={nestedComment.id}>{nestedComment.text}</li>
-                      ))}
-                    </ul>
-                  </CommentItem>
-                ))}
+                {post.comments &&
+                  post.comments.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      postId={postId}
+                      handleNestedCommentSubmit={handleNestedCommentSubmit}
+                      nestedCommentText={nestedCommentText}
+                      setNestedCommentText={setNestedCommentText}
+                    />
+                  ))}
               </CommentList>
             </TitleAndContent>
           ) : (
